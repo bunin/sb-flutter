@@ -1,3 +1,9 @@
+mixin UserUtils {
+  String capitalize(String s) {
+    return s[0].toUpperCase() + s.substring(1).toLowerCase();
+  }
+}
+
 extension MyString on String {
   String capitalize(String s) {
     return s[0].toUpperCase() + s.substring(1).toLowerCase();
