@@ -85,6 +85,7 @@ class User {
           _lastName == object._lastName &&
           (phone == object.phone || email == object.email);
     }
+    return false;
   }
 
   void addFriend(Iterable<User> newFriend) {
