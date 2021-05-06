@@ -5,13 +5,21 @@ import 'package:flutter/material.dart';
 
 class FullScreenImage extends StatelessWidget {
   FullScreenImage(
-      {Key key, this.photo, this.altDescription, this.userName, this.name})
+      {Key key,
+      this.photo,
+      this.altDescription,
+      this.userName,
+      this.name,
+      this.userPhoto,
+      this.heroTag})
       : super(key: key);
 
   final String photo;
   final String altDescription;
   final String userName;
   final String name;
+  final String userPhoto;
+  final String heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +50,9 @@ class FullScreenImage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 _buildButton("Save", () {}),
-                SizedBox(width: 12,),
+                SizedBox(
+                  width: 12,
+                ),
                 _buildButton("Visit", () {}),
               ],
             ),
