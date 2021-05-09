@@ -48,7 +48,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         curve: Curves.ease,
         items: _tabs,
         currentTab: currentTab,
-        onItemSelected: (index) {
+        onItemSelected: (int index) {
           setState(() {
             currentTab = index;
           });
@@ -79,14 +79,14 @@ class BottomNavyBar extends StatelessWidget {
     this.currentTab,
     this.showElevation = true,
     this.backgroundColor,
-    this.itemCornerRadius = 50,
-    this.containerHeight = 59,
+    this.itemCornerRadius = 24,
+    this.containerHeight = 56,
     this.animationDuration = const Duration(milliseconds: 270),
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     @required this.items,
     @required this.onItemSelected,
     this.curve = Curves.linear,
-  }) {
+  }) : super(key: key) {
     assert(items != null);
     assert(items.length >= 2 && items.length <= 5);
     assert(onItemSelected != null);
@@ -104,7 +104,7 @@ class BottomNavyBar extends StatelessWidget {
         color: bgColor,
         boxShadow: [
           if (showElevation)
-            const BoxShadow(color: Colors.black12, blurRadius: 2)
+            const BoxShadow(color: Colors.black12, blurRadius: 2),
         ],
       ),
       child: SafeArea(
@@ -167,41 +167,35 @@ class _ItemWidget extends StatelessWidget {
       height: double.maxFinite,
       duration: animationDuration,
       curve: curve,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
         borderRadius: BorderRadius.circular(itemCornerRadius),
       ),
-      child: Container(
-        width: isSelected
-            ? 150
-            : (MediaQuery.of(context).size.width - 150 - 8 * 4 - 4 * 2) / 2,
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(item.asset,
-                size: 20,
-                color: isSelected ? item.activeColor : item.inactiveColor),
-            SizedBox(
-              width: 4,
-            ),
-            Expanded(
-                child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 4),
-              child: DefaultTextStyle.merge(
-                style: TextStyle(
-                  color: isSelected ? item.activeColor : item.inactiveColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 1,
-                textAlign: item.textAlign,
-                child: item.title,
+      child: Row(
+        children: <Widget>[
+          Icon(
+            item.asset,
+            size: 20,
+            color: isSelected ? item.activeColor : item.inactiveColor,
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Expanded(
+              child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: DefaultTextStyle.merge(
+              style: TextStyle(
+                color: isSelected ? item.activeColor : item.inactiveColor,
+                fontWeight: FontWeight.bold,
               ),
-            )),
-          ],
-        ),
+              maxLines: 1,
+              textAlign: item.textAlign,
+              child: item.title,
+            ),
+          )),
+        ],
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:FlutterGalleryApp/screens/home_screen.dart';
+import 'package:FlutterGalleryApp/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
