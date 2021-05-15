@@ -255,11 +255,11 @@ class _FullScreenImageState extends State<FullScreenImage>
                             GallerySaver.saveImage(photo)
                                 .then((value) => Navigator.of(context).pop());
                           },
-                          child: Text('Ok'),
+                          child: Text('Download'),
                         ),
                         FlatButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text('Cancel'),
+                          child: Text('Close'),
                         ),
                       ],
                     );

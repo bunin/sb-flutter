@@ -1,10 +1,18 @@
+import 'dart:async';
+
+import 'package:FlutterGalleryApp/main.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/demo_screen.dart';
 import 'package:FlutterGalleryApp/screens/feed_screen.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class Home extends StatefulWidget {
+  final Stream<ConnectivityResult> onConnectivityChanged;
+
+  Home(this.onConnectivityChanged);
+
   @override
   State<StatefulWidget> createState() => _HomeState();
 }
@@ -12,6 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   int currentTab = 0;
   final PageStorageBucket bucket = PageStorageBucket();
+  StreamSubscription subscription;
 
   List<Widget> pages = [
     Feed(key: PageStorageKey('FeedPage')),
@@ -39,6 +48,32 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       inactiveColor: AppColors.manatee,
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    subscription =
+        widget.onConnectivityChanged.listen((ConnectivityResult result) {
+      switch (result) {
+        case ConnectivityResult.wifi:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.mobile:
+// Вызовете удаление Overlay тут
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.none:
+          ConnectivityOverlay().showOverlay(context, widget);
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
