@@ -1,8 +1,10 @@
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/feed_screen.dart';
+import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class FullScreenImageArguments {
   final String photo;
@@ -134,7 +136,7 @@ class _FullScreenImageState extends State<FullScreenImage>
                 const SizedBox(height: 9),
                 _buildPhotoMeta(),
                 const SizedBox(height: 17),
-                _buildActionButton(),
+                _buildActionButtons(),
               ],
             ),
           ],
@@ -157,23 +159,12 @@ class _FullScreenImageState extends State<FullScreenImage>
           ),
           onPressed: () {
             showModalBottomSheet(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                context: context,
-                builder: (context) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.mercury,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(10, (index) => FlutterLogo()),
-                    ),
-                  );
-                });
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              context: context,
+              builder: (context) => ClaimBottomSheet(),
+            );
           },
         ),
       ],
@@ -241,7 +232,7 @@ class _FullScreenImageState extends State<FullScreenImage>
     );
   }
 
-  Widget _buildActionButton() {
+  Widget _buildActionButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -255,11 +246,15 @@ class _FullScreenImageState extends State<FullScreenImage>
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Alert Dialog title'),
-                      content: Text('Alert Dialog body'),
+                      title: Text('download photos'),
+                      content:
+                          Text('Are you sure you want to download a photo?'),
                       actions: [
                         FlatButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () {
+                            GallerySaver.saveImage(photo)
+                                .then((value) => Navigator.of(context).pop());
+                          },
                           child: Text('Ok'),
                         ),
                         FlatButton(

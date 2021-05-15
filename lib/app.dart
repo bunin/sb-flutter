@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/home.dart';
 import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Home(),
       theme: ThemeData(
-        textTheme: TextTheme(headline1: TextStyle(color: Colors.black26)),
+        textTheme: buildAppTextTheme(),
       ),
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (context) {
