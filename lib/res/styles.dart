@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
@@ -58,5 +59,16 @@ class AppStyles {
     fontWeight: FontWeight.bold,
     fontFamily: 'Roboto',
     fontStyle: FontStyle.normal,
+  );
+}
+
+TextTheme buildAppTextTheme() {
+  return TextTheme(
+    headline1: AppStyles.h1Black,
+    headline2: AppStyles.h2Black,
+    headline3: AppStyles.h3,
+    headline4: AppStyles.h4,
+    headline5: AppStyles.h5Black,
+    headline6: AppStyles.h6,
   );
 }

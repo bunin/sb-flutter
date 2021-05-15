@@ -54,7 +54,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             var value = await Navigator.push(
               context,
               MaterialPageRoute(builder: (ctx) => DemoScreen()),
-             );
+            );
             print(value);
           } else {
             setState(() {

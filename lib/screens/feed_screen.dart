@@ -37,38 +37,46 @@ class _FeedState extends State<Feed> {
   }
 
   Widget _buildItem(int index) {
+    final heroTag = "feedItem_$index";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/fullScreenImage',
-                  arguments: FullScreenImageArguments(
-                    routeSettings: RouteSettings(arguments: 'Some title'),
-                    altDescription: 'This is Flutter dash. I love him :)',
-                    name: 'Kirill Adeshchennko',
-                    userName: 'kaparray',
-                    userPhoto:
-                        'https://skill-branch.ru/img/speakers/Adechenko.jpg',
-                    heroTag: "$index",
-                  ));
+              Navigator.pushNamed(
+                context,
+                '/fullScreenImage',
+                arguments: FullScreenImageArguments(
+                  photo: kFlutterDash,
+                  altDescription: 'This is Flutter dash. I love him :)',
+                  userName: 'kaparray',
+                  name: 'Kirill Adeshchennko',
+                  userPhoto:
+                      'https://skill-branch.ru/img/speakers/Adechenko.jpg',
+                  heroTag: heroTag,
+                  routeSettings: RouteSettings(arguments: kFlutterDash),
+                ),
+              );
             },
-            child: Hero(tag: "$index", child: Photo(photoLink: kFlutterDash))),
-        _buildPhotoMeta(),
+            child: Hero(tag: heroTag, child: Photo(photoLink: kFlutterDash))),
+        _buildPhotoMeta(index),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Text(
             'This is flutter dash. I love him :)',
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: AppStyles.h3.copyWith(color: AppColors.black),
+            style: Theme.of(context)
+                .textTheme
+                .headline3
+                .copyWith(color: AppColors.black),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildPhotoMeta() {
+  Widget _buildPhotoMeta(int index) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
@@ -86,11 +94,14 @@ class _FeedState extends State<Feed> {
                 children: <Widget>[
                   Text(
                     'bunin',
-                    style: AppStyles.h2Black,
+                    style: Theme.of(context).textTheme.headline2,
                   ),
                   Text(
                     '@bunin',
-                    style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: AppColors.manatee),
                   ),
                 ],
               ),

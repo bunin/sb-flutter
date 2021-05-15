@@ -9,6 +9,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: Home(),
+      theme: ThemeData(
+        textTheme: TextTheme(headline1: TextStyle(color: Colors.black26)),
+      ),
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(builder: (context) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                children: [
+                  Text('404'),
+                  Text('Page not found'),
+                ],
+              ),
+            ),
+          );
+        });
+      },
       onGenerateRoute: (RouteSettings settings) {
         if (settings.name == '/fullScreenImage') {
           FullScreenImageArguments args =
@@ -34,11 +52,6 @@ class MyApp extends StatelessWidget {
         return null;
       },
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Home(),
     );
   }
 }
