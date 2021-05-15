@@ -42,18 +42,16 @@ class _FeedState extends State<Feed> {
       children: <Widget>[
         GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FullScreenImage(
-                            altDescription:
-                                'This is Flutter dash. I love him :)',
-                            name: 'Kirill Adeshchennko',
-                            userName: 'kaparray',
-                            userPhoto:
-                                'https://skill-branch.ru/img/speakers/Adechenko.jpg',
-                            heroTag: "$index",
-                          )));
+              Navigator.pushNamed(context, '/fullScreenImage',
+                  arguments: FullScreenImageArguments(
+                    routeSettings: RouteSettings(arguments: 'Some title'),
+                    altDescription: 'This is Flutter dash. I love him :)',
+                    name: 'Kirill Adeshchennko',
+                    userName: 'kaparray',
+                    userPhoto:
+                        'https://skill-branch.ru/img/speakers/Adechenko.jpg',
+                    heroTag: "$index",
+                  ));
             },
             child: Hero(tag: "$index", child: Photo(photoLink: kFlutterDash))),
         _buildPhotoMeta(),

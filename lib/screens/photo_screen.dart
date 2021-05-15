@@ -4,6 +4,28 @@ import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class FullScreenImageArguments {
+  final String photo;
+  final String altDescription;
+  final String userName;
+  final String name;
+  final String userPhoto;
+  final String heroTag;
+  final Key key;
+  final RouteSettings routeSettings;
+
+  FullScreenImageArguments({
+    this.photo,
+    this.altDescription,
+    this.userName,
+    this.name,
+    this.userPhoto,
+    this.heroTag,
+    this.key,
+    this.routeSettings,
+  });
+}
+
 class FullScreenImage extends StatefulWidget {
   FullScreenImage(
       {Key key,
@@ -85,13 +107,7 @@ class _FullScreenImageState extends State<FullScreenImage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Photo'),
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.back),
-          onPressed: () => Navigator.of(context).pop(true),
-        ),
-      ),
+      appBar: _buildAppBar(context),
       body: Column(
         children: <Widget>[
           Column(
@@ -114,11 +130,59 @@ class _FullScreenImageState extends State<FullScreenImage>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    _buildButton("Save", () {}),
+                    _buildButton("Save", () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Alert Dialog title'),
+                              content: Text('Alert Dialog body'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text('Ok'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text('Cancel'),
+                                ),
+                              ],
+                            );
+                          });
+                      return;
+                    }),
                     SizedBox(
                       width: 12,
                     ),
-                    _buildButton("Visit", () {}),
+                    _buildButton("Visit", () async {
+                      OverlayState overlayState = Overlay.of(context);
+                      OverlayEntry overlayEntry = OverlayEntry(
+                          builder: (ctx) => Positioned(
+                              top: MediaQuery.of(context).viewInsets.top + 50,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    padding:
+                                        EdgeInsets.fromLTRB(16, 10, 16, 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mercury,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text('SkillBranch'),
+                                  ),
+                                ),
+                              )));
+
+                      overlayState.insert(overlayEntry);
+                      await Future.delayed(Duration(seconds: 1));
+                      overlayEntry.remove();
+                      return;
+                    }),
                   ],
                 ),
               ),
@@ -129,7 +193,56 @@ class _FullScreenImageState extends State<FullScreenImage>
     );
   }
 
-  Widget _buildButton(String text, void Function() handler) {
+  AppBar _buildAppBar(BuildContext context) {
+    // String title = ModalRoute.of(context).settings.arguments;
+    return AppBar(
+      backgroundColor: AppColors.white,
+      centerTitle: true,
+      elevation: 0,
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: AppColors.grayChateau,
+          ),
+          onPressed: () {
+            showModalBottomSheet(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                context: context,
+                builder: (context) {
+                  return ClipRRect(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.mercury,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(10, (index) => FlutterLogo()),
+                      ),
+                    ),
+                  );
+                });
+          },
+        ),
+      ],
+      leading: IconButton(
+        icon: Icon(
+          CupertinoIcons.back,
+          color: AppColors.grayChateau,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text(
+        'Photo',
+        style: AppStyles.h2Black,
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, VoidCallback handler) {
     return GestureDetector(
       onTap: handler,
       child: Container(

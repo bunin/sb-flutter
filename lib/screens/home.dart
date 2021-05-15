@@ -1,4 +1,5 @@
 import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/screens/demo_screen.dart';
 import 'package:FlutterGalleryApp/screens/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -48,10 +49,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         curve: Curves.ease,
         items: _tabs,
         currentTab: currentTab,
-        onItemSelected: (int index) {
-          setState(() {
-            currentTab = index;
-          });
+        onItemSelected: (int index) async {
+          if (index == 1) {
+            var value = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (ctx) => DemoScreen()),
+             );
+            print(value);
+          } else {
+            setState(() {
+              currentTab = index;
+            });
+          }
         },
       ),
       body: PageStorage(
