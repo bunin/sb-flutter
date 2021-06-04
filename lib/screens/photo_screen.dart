@@ -15,6 +15,8 @@ class FullScreenImageArguments {
   final String heroTag;
   final Key key;
   final RouteSettings routeSettings;
+  final int likes;
+  final bool liked;
 
   FullScreenImageArguments({
     this.photo,
@@ -25,6 +27,8 @@ class FullScreenImageArguments {
     this.heroTag,
     this.key,
     this.routeSettings,
+    this.likes,
+    this.liked,
   });
 }
 
@@ -37,6 +41,8 @@ class FullScreenImage extends StatefulWidget {
     this.name = '',
     this.userPhoto = '',
     this.heroTag,
+    this.likes,
+    this.liked,
   }) : super(key: key);
 
   final String photo;
@@ -45,6 +51,8 @@ class FullScreenImage extends StatefulWidget {
   final String name;
   final String userPhoto;
   final String heroTag;
+  final int likes;
+  final bool liked;
 
   @override
   State<StatefulWidget> createState() {
@@ -127,7 +135,7 @@ class _FullScreenImageState extends State<FullScreenImage>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    widget.altDescription,
+                    widget.altDescription ?? 'NOTHING',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headline3,
@@ -238,7 +246,7 @@ class _FullScreenImageState extends State<FullScreenImage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          LikeButton(10, true),
+          LikeButton(widget.likes ?? 0, widget.liked ?? false),
           SizedBox(width: 14),
           Expanded(
             child: _buildButton("Save", () {

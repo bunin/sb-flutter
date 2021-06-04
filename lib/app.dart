@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/home.dart';
+import 'package:FlutterGalleryApp/screens/home_page.dart';
 import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(Connectivity().onConnectivityChanged),
+      home: Home(
+        Connectivity().onConnectivityChanged,
+      ),
       theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         textTheme: buildAppTextTheme(),
       ),
       onUnknownRoute: (RouteSettings settings) {
@@ -41,6 +45,8 @@ class MyApp extends StatelessWidget {
             userPhoto: args.userPhoto,
             heroTag: args.heroTag,
             key: args.key,
+            likes: args.likes,
+            liked: args.liked,
           );
 
           if (Platform.isAndroid) {

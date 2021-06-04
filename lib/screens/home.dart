@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:FlutterGalleryApp/data_provider.dart';
 import 'package:FlutterGalleryApp/main.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/demo_screen.dart';
 import 'package:FlutterGalleryApp/screens/feed_screen.dart';
+import 'package:FlutterGalleryApp/screens/webview_page.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -54,19 +56,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
     subscription =
         widget.onConnectivityChanged.listen((ConnectivityResult result) {
-      switch (result) {
-        case ConnectivityResult.wifi:
-          ConnectivityOverlay().removeOverlay(context);
-          break;
-        case ConnectivityResult.mobile:
-// Вызовете удаление Overlay тут
-          ConnectivityOverlay().removeOverlay(context);
-          break;
-        case ConnectivityResult.none:
-          ConnectivityOverlay().showOverlay(context, widget);
-          break;
-      }
-    });
+          switch (result) {
+            case ConnectivityResult.wifi:
+              ConnectivityOverlay().removeOverlay(context);
+              break;
+            case ConnectivityResult.mobile:
+              ConnectivityOverlay().removeOverlay(context);
+              break;
+            case ConnectivityResult.none:
+              ConnectivityOverlay().showOverlay(context, widget);
+              break;
+          }
+        });
   }
 
   @override
@@ -77,6 +78,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // if (DataProvider.authToken == "") {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => WebViewPage()),
+    //   ).then((value) {
+    //     RegExp exp = RegExp("(?<==).*");
+    //     var oneTimeCode = exp.stringMatch(value);
+    //
+    //     DataProvider.doLogin(oneTimeCode: oneTimeCode).then((value) {
+    //       DataProvider.authToken = value.accessToken;
+    //
+    //       // Navigator.maybePop(context);
+    //     });
+    //   });
+    // }
     return Scaffold(
       bottomNavigationBar: BottomNavyBar(
         showElevation: true,
@@ -140,7 +156,9 @@ class BottomNavyBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = (backgroundColor == null)
-        ? Theme.of(context).bottomAppBarColor
+        ? Theme
+        .of(context)
+        .bottomAppBarColor
         : backgroundColor;
 
     return Container(
@@ -153,27 +171,27 @@ class BottomNavyBar extends StatelessWidget {
       ),
       child: SafeArea(
           child: Container(
-        width: double.infinity,
-        height: containerHeight,
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-        child: Row(
-          mainAxisAlignment: mainAxisAlignment,
-          children: items.map((item) {
-            var index = items.indexOf(item);
-            return GestureDetector(
-              onTap: () => onItemSelected(index),
-              child: _ItemWidget(
-                item: item,
-                isSelected: currentTab == index,
-                backgroundColor: bgColor,
-                itemCornerRadius: itemCornerRadius,
-                animationDuration: animationDuration,
-                curve: curve,
-              ),
-            );
-          }).toList(),
-        ),
-      )),
+            width: double.infinity,
+            height: containerHeight,
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+            child: Row(
+              mainAxisAlignment: mainAxisAlignment,
+              children: items.map((item) {
+                var index = items.indexOf(item);
+                return GestureDetector(
+                  onTap: () => onItemSelected(index),
+                  child: _ItemWidget(
+                    item: item,
+                    isSelected: currentTab == index,
+                    backgroundColor: bgColor,
+                    itemCornerRadius: itemCornerRadius,
+                    animationDuration: animationDuration,
+                    curve: curve,
+                  ),
+                );
+              }).toList(),
+            ),
+          )),
     );
   }
 }
@@ -194,7 +212,8 @@ class _ItemWidget extends StatelessWidget {
     @required this.animationDuration,
     @required this.itemCornerRadius,
     this.curve = Curves.linear,
-  })  : assert(isSelected != null),
+  })
+      : assert(isSelected != null),
         assert(item != null),
         assert(backgroundColor != null),
         assert(animationDuration != null),
@@ -207,7 +226,10 @@ class _ItemWidget extends StatelessWidget {
     return AnimatedContainer(
       width: isSelected
           ? 150
-          : (MediaQuery.of(context).size.width - 150 - 8 * 4 - 4 * 2) / 2,
+          : (MediaQuery
+          .of(context)
+          .size
+          .width - 150 - 8 * 4 - 4 * 2) / 2,
       height: double.maxFinite,
       duration: animationDuration,
       curve: curve,
@@ -228,17 +250,17 @@ class _ItemWidget extends StatelessWidget {
           ),
           Expanded(
               child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: DefaultTextStyle.merge(
-              style: TextStyle(
-                color: isSelected ? item.activeColor : item.inactiveColor,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 1,
-              textAlign: item.textAlign,
-              child: item.title,
-            ),
-          )),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(
+                    color: isSelected ? item.activeColor : item.inactiveColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  textAlign: item.textAlign,
+                  child: item.title,
+                ),
+              )),
         ],
       ),
     );
@@ -252,12 +274,11 @@ class BottomNavyBarItem {
   final Color inactiveColor;
   final TextAlign textAlign;
 
-  BottomNavyBarItem(
-      {@required this.asset,
-      @required this.title,
-      this.activeColor = Colors.blue,
-      this.textAlign,
-      this.inactiveColor}) {
+  BottomNavyBarItem({@required this.asset,
+    @required this.title,
+    this.activeColor = Colors.blue,
+    this.textAlign,
+    this.inactiveColor}) {
     assert(asset != null);
     assert(title != null);
   }
