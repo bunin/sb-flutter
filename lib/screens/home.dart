@@ -1,14 +1,12 @@
 import 'dart:async';
 
-import 'package:FlutterGalleryApp/data_provider.dart';
-import 'package:FlutterGalleryApp/main.dart';
-import 'package:FlutterGalleryApp/res/res.dart';
-import 'package:FlutterGalleryApp/screens/demo_screen.dart';
-import 'package:FlutterGalleryApp/screens/feed_screen.dart';
-import 'package:FlutterGalleryApp/screens/webview_page.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gallery_app/main.dart';
+import 'package:flutter_gallery_app/res/res.dart';
+import 'package:flutter_gallery_app/screens/feed_screen.dart';
+import 'package:flutter_gallery_app/screens/search_screen.dart';
 
 class Home extends StatefulWidget {
   final Stream<ConnectivityResult> onConnectivityChanged;
@@ -20,31 +18,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  int currentTab = 0;
+  int currentTab = 1; // todo set to 0
   final PageStorageBucket bucket = PageStorageBucket();
   StreamSubscription subscription;
 
   List<Widget> pages = [
     Feed(key: PageStorageKey('FeedPage')),
-    Container(),
+    SearchScreen(key: PageStorageKey('SearchPage')),
     Container(),
   ];
 
   final List<BottomNavyBarItem> _tabs = [
     BottomNavyBarItem(
       asset: AppIcons.home,
-      title: Text('Feed'),
+      title: Text('Home'),
       activeColor: AppColors.dodgerBlue,
       inactiveColor: AppColors.manatee,
     ),
     BottomNavyBarItem(
-      asset: AppIcons.home,
+      asset: Icons.search,
       title: Text('Search'),
       activeColor: AppColors.dodgerBlue,
       inactiveColor: AppColors.manatee,
     ),
     BottomNavyBarItem(
-      asset: AppIcons.home,
+      asset: Icons.person,
       title: Text('User'),
       activeColor: AppColors.dodgerBlue,
       inactiveColor: AppColors.manatee,
@@ -56,18 +54,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
     subscription =
         widget.onConnectivityChanged.listen((ConnectivityResult result) {
-          switch (result) {
-            case ConnectivityResult.wifi:
-              ConnectivityOverlay().removeOverlay(context);
-              break;
-            case ConnectivityResult.mobile:
-              ConnectivityOverlay().removeOverlay(context);
-              break;
-            case ConnectivityResult.none:
-              ConnectivityOverlay().showOverlay(context, widget);
-              break;
-          }
-        });
+      switch (result) {
+        case ConnectivityResult.wifi:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.mobile:
+          setState(() {});
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.none:
+          setState(() {});
+          ConnectivityOverlay().showOverlay(context, widget);
+          break;
+      }
+    });
   }
 
   @override
@@ -78,46 +78,27 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // if (DataProvider.authToken == "") {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => WebViewPage()),
-    //   ).then((value) {
-    //     RegExp exp = RegExp("(?<==).*");
-    //     var oneTimeCode = exp.stringMatch(value);
-    //
-    //     DataProvider.doLogin(oneTimeCode: oneTimeCode).then((value) {
-    //       DataProvider.authToken = value.accessToken;
-    //
-    //       // Navigator.maybePop(context);
-    //     });
-    //   });
-    // }
     return Scaffold(
+      appBar: null,
       bottomNavigationBar: BottomNavyBar(
-        showElevation: true,
-        itemCornerRadius: 8,
-        curve: Curves.ease,
-        items: _tabs,
-        currentTab: currentTab,
-        onItemSelected: (int index) async {
-          if (index == 1) {
-            var value = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (ctx) => DemoScreen()),
-            );
-            print(value);
-          } else {
+          showElevation: true,
+          itemCornerRadius: 8,
+          curve: Curves.ease,
+          items: _tabs,
+          currentTab: currentTab,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          onItemSelected: (int index) {
             setState(() {
               currentTab = index;
             });
-          }
-        },
-      ),
+          }),
       body: PageStorage(
         child: pages[currentTab],
         bucket: bucket,
       ),
+      resizeToAvoidBottomInset: false,
+      extendBody: false,
+      extendBodyBehindAppBar: true,
     );
   }
 }
@@ -140,7 +121,7 @@ class BottomNavyBar extends StatelessWidget {
     this.showElevation = true,
     this.backgroundColor,
     this.itemCornerRadius = 24,
-    this.containerHeight = 56,
+    this.containerHeight = 57,
     this.animationDuration = const Duration(milliseconds: 270),
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     @required this.items,
@@ -156,43 +137,39 @@ class BottomNavyBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = (backgroundColor == null)
-        ? Theme
-        .of(context)
-        .bottomAppBarColor
+        ? Theme.of(context).bottomAppBarColor
         : backgroundColor;
 
-    return Container(
+    return SafeArea(
+        child: Container(
       decoration: BoxDecoration(
         color: bgColor,
         boxShadow: [
           if (showElevation)
-            const BoxShadow(color: Colors.black12, blurRadius: 2),
+            const BoxShadow(color: Colors.white, blurRadius: 16)
         ],
       ),
-      child: SafeArea(
-          child: Container(
-            width: double.infinity,
-            height: containerHeight,
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-            child: Row(
-              mainAxisAlignment: mainAxisAlignment,
-              children: items.map((item) {
-                var index = items.indexOf(item);
-                return GestureDetector(
-                  onTap: () => onItemSelected(index),
-                  child: _ItemWidget(
-                    item: item,
-                    isSelected: currentTab == index,
-                    backgroundColor: bgColor,
-                    itemCornerRadius: itemCornerRadius,
-                    animationDuration: animationDuration,
-                    curve: curve,
-                  ),
-                );
-              }).toList(),
+      width: double.infinity,
+      height: containerHeight,
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      child: Row(
+        mainAxisAlignment: mainAxisAlignment,
+        children: items.map((item) {
+          var index = items.indexOf(item);
+          return GestureDetector(
+            onTap: () => onItemSelected(index),
+            child: _ItemWidget(
+              item: item,
+              isSelected: currentTab == index,
+              backgroundColor: bgColor,
+              itemCornerRadius: itemCornerRadius,
+              animationDuration: animationDuration,
+              curve: curve,
             ),
-          )),
-    );
+          );
+        }).toList(),
+      ),
+    ));
   }
 }
 
@@ -212,8 +189,7 @@ class _ItemWidget extends StatelessWidget {
     @required this.animationDuration,
     @required this.itemCornerRadius,
     this.curve = Curves.linear,
-  })
-      : assert(isSelected != null),
+  })  : assert(isSelected != null),
         assert(item != null),
         assert(backgroundColor != null),
         assert(animationDuration != null),
@@ -224,21 +200,16 @@ class _ItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      width: isSelected
-          ? 150
-          : (MediaQuery
-          .of(context)
-          .size
-          .width - 150 - 8 * 4 - 4 * 2) / 2,
+      width: MediaQuery.of(context).size.width / 3 - 16 * 3,
       height: double.maxFinite,
       duration: animationDuration,
       curve: curve,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
-        borderRadius: BorderRadius.circular(itemCornerRadius),
-      ),
-      child: Row(
+      // padding: const EdgeInsets.symmetric(horizontal: 8),
+      // decoration: BoxDecoration(
+      //   color: isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
+      //   borderRadius: BorderRadius.circular(itemCornerRadius),
+      // ),
+      child: Column(
         children: <Widget>[
           Icon(
             item.asset,
@@ -246,21 +217,17 @@ class _ItemWidget extends StatelessWidget {
             color: isSelected ? item.activeColor : item.inactiveColor,
           ),
           SizedBox(
-            width: 4,
+            height: 4,
           ),
-          Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: DefaultTextStyle.merge(
-                  style: TextStyle(
-                    color: isSelected ? item.activeColor : item.inactiveColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  textAlign: item.textAlign,
-                  child: item.title,
-                ),
-              )),
+          DefaultTextStyle.merge(
+            style: TextStyle(
+              color: isSelected ? item.activeColor : item.inactiveColor,
+              fontWeight: FontWeight.bold,
+            ),
+            maxLines: 1,
+            textAlign: item.textAlign,
+            child: item.title,
+          ),
         ],
       ),
     );
@@ -274,11 +241,12 @@ class BottomNavyBarItem {
   final Color inactiveColor;
   final TextAlign textAlign;
 
-  BottomNavyBarItem({@required this.asset,
-    @required this.title,
-    this.activeColor = Colors.blue,
-    this.textAlign,
-    this.inactiveColor}) {
+  BottomNavyBarItem(
+      {@required this.asset,
+      @required this.title,
+      this.activeColor = Colors.blue,
+      this.textAlign,
+      this.inactiveColor}) {
     assert(asset != null);
     assert(title != null);
   }

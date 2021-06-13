@@ -1,4 +1,4 @@
-import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:flutter_gallery_app/res/res.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

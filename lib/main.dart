@@ -1,6 +1,6 @@
-import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:flutter/material.dart';
-import 'app.dart';
+import 'package:flutter_gallery_app/app.dart';
+import 'package:flutter_gallery_app/res/res.dart';
 
 void main() {
   // debugRepaintRainbowEnabled = true;
@@ -16,31 +16,38 @@ class ConnectivityOverlay {
 
   ConnectivityOverlay._internal();
 
-  static OverlayEntry overlayEntry;
+  static OverlayEntry? overlayEntry;
 
   void showOverlay(BuildContext context, Widget child) {
-    OverlayState overlayState = Overlay.of(context);
+    OverlayState? overlayState = Overlay.of(context);
     overlayEntry = OverlayEntry(
-        builder: (ctx) => Positioned(
-            top: MediaQuery.of(context).viewInsets.top + 50,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.mercury,
-                    borderRadius: BorderRadius.circular(12),
+        builder: (ctx) => Container(
+              color: AppColors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_off_rounded,
+                    color: Color(0xFFB2BBC6),
+                    size: 60,
                   ),
-                  child: Text('No internet connection'),
-                ),
+                  Text(
+                    'No internet connection',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: AppColors.manatee,
+                        decoration: TextDecoration.none,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                        height: 22 / 15,
+                        letterSpacing: -0.41),
+                  ),
+                ],
               ),
-            )));
+            ));
 
-    overlayState.insert(overlayEntry);
+    overlayState?.insert(overlayEntry!);
   }
 
   void removeOverlay(BuildContext context) {

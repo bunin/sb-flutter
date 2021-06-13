@@ -19,6 +19,7 @@ class AppStyles {
     fontWeight: FontWeight.normal,
     color: AppColors.black,
     fontStyle: FontStyle.normal,
+    letterSpacing: -0.08,
     fontFamily: 'Roboto',
   );
 
@@ -43,13 +44,13 @@ class AppStyles {
   );
 
   static const h2Black = TextStyle(
-    fontSize: 17,
-    height: 22 / 17,
+    fontSize: 18,
+    height: 23 / 18,
     fontFamily: 'Roboto',
     color: AppColors.black,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.bold,
     fontStyle: FontStyle.normal,
-    letterSpacing: -0.41,
+    letterSpacing: -0.47,
   );
 
   static const h1Black = TextStyle(

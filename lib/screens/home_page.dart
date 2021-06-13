@@ -1,9 +1,7 @@
-import 'package:FlutterGalleryApp/data_provider.dart';
-import 'package:FlutterGalleryApp/screens/feed_screen.dart';
-import 'package:FlutterGalleryApp/screens/webview_page.dart';
+import 'package:flutter_gallery_app/data_provider.dart';
+import 'package:flutter_gallery_app/screens/feed_screen.dart';
+import 'package:flutter_gallery_app/screens/webview_page.dart';
 import 'package:flutter/material.dart';
-
-import 'photo_list.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -30,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               width: 100,
+              // ignore: deprecated_member_use
               child: FlatButton(
                 child: Text("Login"),
                 color: Colors.blue,

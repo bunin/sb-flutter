@@ -1,37 +1,20 @@
 import 'dart:convert';
-
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'models/auth/model.dart';
 import 'models/photo_list/model.dart';
 import 'package:http/http.dart' as http;
 
-/*
- async {
-  const url = "$baseUrl/api/v1/login";
-
-  var response = await http.post(url, body: {
-    'user': '$username',
-    'password': '$pwd',
-  });
-
-  if (response.statusCode >= 200 && response.statusCode < 300) {
-    return Login.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Error: ${response.reasonPhrase}');
-  }
-}
-*/
-
 class DataProvider {
-  static String authToken = "7qycluuH2b0ZnhnwmeLxgQe-B-nfM9D7hLgs-DAySDI";
-  static const String _accessKey =
-      '7cgTCQhjINdqSHdJuyuDuVV5JQ8bCFKl6qEoJwceOzQ'; //app access key from console
+  static String authToken = "";
+  static const String _accessKey = const String.fromEnvironment("UNSPLASH_KEY");
   static const String _secretKey =
-      'Li-9R7RBXhF_Dx-UaJ9VQqzjN2DZSV8yXqv_moja_4I'; //app secrey key from console
+      const String.fromEnvironment("UNSPLASH_SECRET");
   static const String authUrl =
-      'https://unsplash.com/oauth/authorize?client_id=$_accessKey&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=public+write_likes'; //authorize url from https://unsplash.com/oauth/applications/{your_app_id}
+      'https://unsplash.com/oauth/authorize?client_id=$_accessKey&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=public+write_likes';
 
-  static Future<Auth> doLogin({String oneTimeCode}) async {
-    var response = await http.post('https://unsplash.com/oauth/token',
+  static Future<Auth> doLogin({String oneTimeCode = ""}) async {
+    var response = await http.post(
+        Uri(scheme: 'https', host: 'unsplash.com', path: '/oauth/token'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -46,20 +29,16 @@ class DataProvider {
   }
 
   static Future<Photos> getPhotos(int page, int perPage) async {
-    var response = await http.get(
-        'https://api.unsplash.com/photos?page=$page&per_page=$perPage',
-        headers: {'Authorization': 'Bearer $authToken'});
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return Photos.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Error: ${response.reasonPhrase}');
-    }
+    var response = await DefaultCacheManager().getSingleFile(
+      'https://api.unsplash.com/photos?page=$page&per_page=$perPage',
+      headers: {'Authorization': 'Bearer $authToken'},
+    );
+    return Photos.fromJson(json.decode(response.readAsStringSync()));
   }
 
   static Future<Photos> searchPhotos(
-      {String keyword, int page = 1, int pageSize = 10}) async {
-    var response = await http.get(
+      {String keyword = "", int page = 1, int pageSize = 10}) async {
+    var response = await DefaultCacheManager().getSingleFile(
         'https://api.unsplash.com/search/photos?page=' +
             page.toString() +
             '&per_page=' +
@@ -68,11 +47,8 @@ class DataProvider {
             Uri.encodeQueryComponent(keyword),
         headers: {'Authorization': 'Bearer $authToken'});
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return Photos.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Error: ${response.reasonPhrase}');
-    }
+    Map<String, dynamic> data = jsonDecode(response.readAsStringSync());
+    return Photos.fromJson(data['results']);
   }
 
   static Future<Photo> getRandomPhoto() async {

@@ -1,7 +1,7 @@
 class Photos {
-  List<Photo> photos;
+  List<Photo> photos = [];
 
-  Photos({this.photos});
+  Photos({required this.photos});
 
   Photos.fromJson(List<dynamic> json) {
     photos = <Photo>[];
@@ -54,10 +54,8 @@ class Photo {
       this.altDescription,
       this.urls,
       this.links,
-      //this.categories,
       this.likes,
       this.likedByUser,
-      //this.currentUserCollections,
       this.sponsorship,
       this.user});
 
@@ -73,26 +71,8 @@ class Photo {
     altDescription = json['alt_description'];
     urls = json['urls'] != null ? new Urls.fromJson(json['urls']) : null;
     links = json['links'] != null ? new Links.fromJson(json['links']) : null;
-    //был пустой объект, его генератор не смог обработать
-    //в этом примере он на мне нужен
-    //комментируем
-    // if (json['categories'] != null) {
-    //   categories = new List<Null>();
-    //   json['categories'].forEach((v) {
-    //     categories.add(new Null.fromJson(v));
-    //   });
-    // }
     likes = json['likes'];
     likedByUser = json['liked_by_user'] ?? false;
-    //был пустой объект, его генератор не смог обработать
-    //в этом примере он на мне нужен
-    //комментируем
-    // if (json['current_user_collections'] != null) {
-    //   currentUserCollections = new List<Null>();
-    //   json['current_user_collections'].forEach((v) {
-    //     currentUserCollections.add(new Null.fromJson(v));
-    //   });
-    // }
     sponsorship = json['sponsorship'] != null
         ? new Sponsorship.fromJson(json['sponsorship'])
         : null;
@@ -116,21 +96,8 @@ class Photo {
     if (this.links != null) {
       data['links'] = this.links.toJson();
     }
-    //был пустой объект, его генератор не смог обработать
-    //в этом примере он на мне нужен
-    //комментируем
-    // if (this.categories != null) {
-    //   data['categories'] = this.categories.map((v) => v.toJson()).toList();
-    // }
     data['likes'] = this.likes;
     data['liked_by_user'] = this.likedByUser;
-    //был пустой объект, его генератор не смог обработать
-    //в этом примере он на мне нужен
-    //комментируем
-    // if (this.currentUserCollections != null) {
-    //   data['current_user_collections'] =
-    //       this.currentUserCollections.map((v) => v.toJson()).toList();
-    // }
     if (this.sponsorship != null) {
       data['sponsorship'] = this.sponsorship.toJson();
     }

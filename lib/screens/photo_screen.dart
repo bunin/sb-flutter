@@ -1,9 +1,9 @@
-import 'package:FlutterGalleryApp/res/res.dart';
-import 'package:FlutterGalleryApp/screens/feed_screen.dart';
-import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
-import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gallery_app/res/res.dart';
+import 'package:flutter_gallery_app/screens/feed_screen.dart';
+import 'package:flutter_gallery_app/widgets/claim_bottom_sheet.dart';
+import 'package:flutter_gallery_app/widgets/widgets.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
 class FullScreenImageArguments {
@@ -14,9 +14,12 @@ class FullScreenImageArguments {
   final String userPhoto;
   final String heroTag;
   final Key key;
-  final RouteSettings routeSettings;
   final int likes;
   final bool liked;
+  final String photoID;
+  final Color color;
+  final double width;
+  final double height;
 
   FullScreenImageArguments({
     this.photo,
@@ -26,9 +29,12 @@ class FullScreenImageArguments {
     this.userPhoto,
     this.heroTag,
     this.key,
-    this.routeSettings,
     this.likes,
     this.liked,
+    this.photoID,
+    this.color,
+    this.width,
+    this.height,
   });
 }
 
@@ -43,6 +49,10 @@ class FullScreenImage extends StatefulWidget {
     this.heroTag,
     this.likes,
     this.liked,
+    this.photoID,
+    this.color,
+    this.width,
+    this.height,
   }) : super(key: key);
 
   final String photo;
@@ -53,6 +63,10 @@ class FullScreenImage extends StatefulWidget {
   final String heroTag;
   final int likes;
   final bool liked;
+  final String photoID;
+  final Color color;
+  final double width;
+  final double height;
 
   @override
   State<StatefulWidget> createState() {
@@ -100,14 +114,6 @@ class _FullScreenImageState extends State<FullScreenImage>
     controller.forward();
   }
 
-  Future<void> _playAnimation() async {
-    try {
-      await controller.forward().orCancel;
-    } on TickerCanceled {
-      // the animation got canceled, probably because it was disposed of
-    }
-  }
-
   @override
   void dispose() {
     controller.dispose();
@@ -116,8 +122,6 @@ class _FullScreenImageState extends State<FullScreenImage>
 
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context).settings.arguments);
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(),
@@ -129,7 +133,12 @@ class _FullScreenImageState extends State<FullScreenImage>
               children: <Widget>[
                 Hero(
                   tag: widget.heroTag,
-                  child: Photo(photoLink: widget.photo),
+                  child: Photo(
+                    photoLink: widget.photo,
+                    bgColor: widget.color,
+                    width: widget.width,
+                    height: widget.height,
+                  ),
                 ),
                 const SizedBox(height: 11),
                 Padding(
@@ -154,11 +163,10 @@ class _FullScreenImageState extends State<FullScreenImage>
   }
 
   AppBar _buildAppBar() {
-    // String title = ModalRoute.of(context).settings.arguments;
     return AppBar(
       elevation: 0,
-      // backgroundColor: AppColors.white,
-      // centerTitle: true,
+      backgroundColor: AppColors.white,
+      centerTitle: true,
       actions: [
         IconButton(
           icon: Icon(
@@ -246,7 +254,11 @@ class _FullScreenImageState extends State<FullScreenImage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          LikeButton(widget.likes ?? 0, widget.liked ?? false),
+          LikeButton(
+            isLiked: widget.liked ?? false,
+            likeCount: widget.likes ?? 0,
+            photoID: widget.photoID,
+          ),
           SizedBox(width: 14),
           Expanded(
             child: _buildButton("Save", () {
@@ -258,6 +270,7 @@ class _FullScreenImageState extends State<FullScreenImage>
                       content:
                           Text('Are you sure you want to download a photo?'),
                       actions: [
+                        // ignore: deprecated_member_use
                         FlatButton(
                           onPressed: () {
                             GallerySaver.saveImage(photo)
@@ -265,6 +278,7 @@ class _FullScreenImageState extends State<FullScreenImage>
                           },
                           child: Text('Download'),
                         ),
+                        // ignore: deprecated_member_use
                         FlatButton(
                           onPressed: () => Navigator.of(context).pop(),
                           child: Text('Close'),

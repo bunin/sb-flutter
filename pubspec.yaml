@@ -1,30 +1,33 @@
-name: FlutterGalleryApp
+name: flutter_gallery_app
 description: Amazing Flutter Project
 author: bunin
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.12.0
-  webview_flutter: ^0.3.22+1
-  dio: ^3.0.9
+  http: ^0.13.3
+  webview_flutter: ^2.0.8
+  dio: ^4.0.0
+  plugin_platform_interface: ^2.0.0
 
-  cupertino_icons: ^0.1.2
-  cached_network_image: any
-  connectivity: ^0.4.8+6
-  gallery_saver: ^2.0.1
-  json_annotation: ^3.0.1
+#  cupertino_icons: ^0.1.2
+  cached_network_image: ^3.0.0
+  connectivity: ^3.0.6
+  gallery_saver: ^2.1.0
+  json_annotation: ^4.0.1
+  flutter_cache_manager: ^3.1.1
+  flutter_staggered_grid_view: ^0.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^1.10.0
-  json_serializable: ^3.3.0
+  build_runner: ^2.0.4
+  json_serializable: ^4.1.3
 
 flutter:
   uses-material-design: true
